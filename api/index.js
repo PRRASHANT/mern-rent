@@ -23,13 +23,17 @@ app.listen(3000,()=> {
     }
 );
 
-app.get('/test',(req, res)=>{
-    res.json({
-        message :'hello world!',
-     });
- }
-);
-
 app.use("/api/user", userRouter);
 app.use('/api/auth', authRouter);
+
+app.use((err, req, res, next )=>{
+    const satusCode =err.satusCode || 500;
+    const message =err.message || 'Internal servor error';
+    return res.status(satusCode).json({
+        success: false,
+        satusCode,
+        message,
+
+    });
+});
 
